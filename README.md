@@ -10,6 +10,6 @@ git clone https://github.com/Kitware/trame-course.git
 cd trame-course
 python3.9 -m venv .venv
 source .venv/bin/activate
-python -m pip install --update pip
+python -m pip install --upgrade pip
 pip install trame
 ```
