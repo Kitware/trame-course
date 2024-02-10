@@ -1,4 +1,5 @@
-FROM kitware/trame
+FROM kitware/trame:py3.9
 
+ENV TRAME_CLIENT_TYPE="vue2"
 COPY --chown=trame-user:trame-user . /deploy
-RUN export TRAME_BUILD_ONLY=1 && /opt/trame/entrypoint.sh
+RUN /opt/trame/entrypoint.sh build

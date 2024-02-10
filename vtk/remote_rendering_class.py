@@ -8,10 +8,10 @@ import vtk
 @TrameApp()
 class Cone:
     def __init__(self, server_name=None):
-        self.server = get_server(server_name)
+        self.server = get_server(server_name, client_type="vue2")
         self._layout = None
         self._init_vtk()
-        self.ui
+        self.ui  # Force ui creation
 
     @property
     def state(self):
