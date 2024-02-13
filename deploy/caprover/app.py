@@ -28,11 +28,6 @@ class Cone:
         with self.state:
             self.state.resolution = v
 
-    @change("resolution")
-    def _on_resolution_change(self, resolution, **kwargs):
-        self.cone.SetResolution(resolution)
-        self.ctrl.view_update()
-
     def reset_resolution(self):
         self.resolution = 6
 
