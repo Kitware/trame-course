@@ -4,6 +4,7 @@ from trame.widgets import vuetify
 def handle_item(action, item):
     print(action, item)
 
+
 with vuetify.VDataTable():
     with vuetify.Template(
         slot_actions="{ item }",

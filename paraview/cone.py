@@ -59,10 +59,14 @@ class Cone:
                     fluid=True,
                     classes="pa-0 fill-height",
                 ):
-                    html_view = paraview.VtkRemoteView(self.view)
+                    html_view = paraview.VtkRemoteView(
+                        self.view, still_ratio=2, interactive_ratio=2
+                    )
                     # html_view = paraview.VtkLocalView(self.view)
                     self.ctrl.view_update = html_view.update
                     self.ctrl.view_reset_camera = html_view.reset_camera
+
+            return layout
 
 
 def main():

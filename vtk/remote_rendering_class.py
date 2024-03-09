@@ -89,7 +89,9 @@ class Cone:
 
                 with layout.content:
                     with vuetify.VContainer(fluid=True, classes="pa-0 fill-height"):
-                        view = vtk_widgets.VtkRemoteView(self.render_window)
+                        view = vtk_widgets.VtkRemoteView(
+                            self.render_window, interactive_ratio=1
+                        )
                         self.ctrl.view_update = view.update
                         self.ctrl.view_reset_camera = view.reset_camera
 
