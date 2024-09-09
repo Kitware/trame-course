@@ -1,3 +1,4 @@
 ```bash
-pvpython ./cone.py --venv ../.venv
+# cd ParaView-5.13/bin
+pvpython --venv ../.venv ./cone.py 
 ```

@@ -1,8 +1,6 @@
-import paraview.web.venv
-
 from trame.app import get_server
-from trame.widgets import vuetify, paraview
-from trame.ui.vuetify import SinglePageLayout
+from trame.widgets import vuetify3 as v3, paraview
+from trame.ui.vuetify3 import SinglePageLayout
 from trame.decorators import TrameApp, change
 
 from paraview import simple
@@ -11,12 +9,13 @@ from paraview import simple
 @TrameApp()
 class Cone:
     def __init__(self, server=None):
-        self.server = get_server(server, client_type="vue2")
+        self.server = get_server(server)
+
         self.cone = simple.Cone()
         self.representation = simple.Show(self.cone)
         self.view = simple.Render()
-        self.state.trame__title = "ParaView cone"
-        self.ui = self._build_ui()
+
+        self._build_ui()
 
     @property
     def state(self):
@@ -36,26 +35,24 @@ class Cone:
 
     def _build_ui(self):
         with SinglePageLayout(self.server) as layout:
+            self.ui = layout
+            self.state.trame__title = "ParaView cone"
+
             layout.icon.click = self.ctrl.view_reset_camera
-            layout.title.set_text("Cone Application")
+            layout.title.set_text("PV Cone")
 
             with layout.toolbar:
-                vuetify.VSpacer()
-                vuetify.VSlider(
+                v3.VSpacer()
+                v3.VSlider(
                     v_model=("resolution", 6),
-                    min=3,
-                    max=60,
-                    step=1,
-                    hide_details=True,
-                    dense=True,
-                    style="max-width: 300px",
+                    min=3, max=60, step=1,
+                    hide_details=True, style="max-width: 300px",
                 )
-                vuetify.VDivider(vertical=True, classes="mx-2")
-                with vuetify.VBtn(icon=True, click=self.reset_resolution):
-                    vuetify.VIcon("mdi-undo-variant")
+                v3.VDivider(vertical=True, classes="mx-2")
+                v3.VBtn(icon="mdi-undo-variant", click=self.reset_resolution)
 
             with layout.content:
-                with vuetify.VContainer(
+                with v3.VContainer(
                     fluid=True,
                     classes="pa-0 fill-height",
                 ):

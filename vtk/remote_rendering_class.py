@@ -1,17 +1,16 @@
 from trame.app import get_server
 from trame.decorators import TrameApp, change
-from trame.widgets import vuetify, vtk as vtk_widgets
-from trame.ui.vuetify import SinglePageLayout
+from trame.widgets import vuetify3 as v3, vtk as vtk_widgets
+from trame.ui.vuetify3 import SinglePageLayout
 import vtk
 
 
 @TrameApp()
 class Cone:
-    def __init__(self, server_name=None):
-        self.server = get_server(server_name, client_type="vue2")
-        self._layout = None
+    def __init__(self, server=None):
+        self.server = get_server(server)
         self._init_vtk()
-        self.ui  # Force ui creation
+        self._build_ui()
 
     @property
     def state(self):
@@ -63,40 +62,31 @@ class Cone:
     def reset_resolution(self):
         self.resolution = 6
 
-    @property
-    def ui(self):
-        if self._layout is None:
-            with SinglePageLayout(self.server) as layout:
-                self._layout = layout
+    def _build_ui(self):
+        with SinglePageLayout(self.server, full_height=True) as layout:
+            self.ui = layout
 
-                layout.icon.click = self.ctrl.view_reset_camera
-                layout.title.set_text("VTK Remote Rendering")
+            layout.icon.click = self.ctrl.view_reset_camera
+            layout.title.set_text("VTK Remote Rendering")
 
-                with layout.toolbar:
-                    vuetify.VSpacer()
-                    vuetify.VSlider(
-                        v_model=("resolution", 6),
-                        min=3,
-                        max=60,
-                        step=1,
-                        hide_details=True,
-                        dense=True,
-                        style="max-width: 300px",
+            with layout.toolbar:
+                v3.VSpacer()
+                v3.VSlider(
+                    v_model=("resolution", 6),
+                    min=3, max=60, step=1,
+                    hide_details=True, style="max-width: 300px",
+                )
+                v3.VDivider(vertical=True, classes="mx-2")
+                v3.VBtn(icon="mdi-undo-variant", click=self.reset_resolution)
+
+            with layout.content:
+                with v3.VContainer(fluid=True, classes="pa-0 fill-height"):
+                    view = vtk_widgets.VtkRemoteView(
+                        self.render_window, 
+                        interactive_ratio=1,
                     )
-                    vuetify.VDivider(vertical=True, classes="mx-2")
-                    with vuetify.VBtn(icon=True, click=self.reset_resolution):
-                        vuetify.VIcon("mdi-undo-variant")
-
-                with layout.content:
-                    with vuetify.VContainer(fluid=True, classes="pa-0 fill-height"):
-                        view = vtk_widgets.VtkRemoteView(
-                            self.render_window, interactive_ratio=1
-                        )
-                        self.ctrl.view_update = view.update
-                        self.ctrl.view_reset_camera = view.reset_camera
-
-        return self._layout
-
+                    self.ctrl.view_update = view.update
+                    self.ctrl.view_reset_camera = view.reset_camera
 
 def main():
     cone_app = Cone()
